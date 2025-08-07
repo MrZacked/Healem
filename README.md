@@ -85,9 +85,6 @@ npm run dev
 npm start
 ```
 
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
 
 ## Docker Setup
 
@@ -213,6 +210,3 @@ healem-health-system/
 - CORS configuration
 - Helmet for security headers
 
-## License
-
-MIT License - see LICENSE file for details.
