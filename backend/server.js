@@ -15,8 +15,48 @@ const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProd = process.env.NODE_ENV === 'production';
 
-app.use(helmet());
+
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'same-origin' },
+  })
+);
+
+
+if (isProd) {
+  app.use(
+    helmet.hsts({
+      maxAge: 63072000, 
+      includeSubDomains: true,
+      preload: true,
+    })
+  );
+}
+
+
+if (isProd) {
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:'],
+        fontSrc: ["'self'", 'data:'],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        frameAncestors: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    })
+  );
+}
 app.use(generalLimiter);
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
